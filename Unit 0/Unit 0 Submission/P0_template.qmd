@@ -49,6 +49,7 @@ __Recreate the first table displayed at [PY4DS: CH2 Data Visualization](https://
 
 ```{python}
 # To recreate the table, all you should need to do is run this code, no editing required
+penguins = load_penguins()
 penguins
 
 ```
@@ -61,6 +62,18 @@ __Recreate an example chart from [PY4DS: CH2 Data Visualization](https://aeturre
 
 ```{python}
 # Include and execute your code here
-
+(
+    ggplot(penguins, aes(x="flipper_length_mm", y="body_mass_g"))
+    + geom_point(aes(color="species", shape="species"))
+    + geom_smooth(method="lm")
+    + labs(
+        title="Body mass and flipper length",
+        subtitle="Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+        x="Flipper length (mm)",
+        y="Body mass (g)",
+        color="Species",
+        shape="Species",
+    )
+)
 
 ```
