@@ -65,8 +65,8 @@ f["year"].min()
 ## QUESTION 2
 
 __What year had the most babies named 'David'? How many babies were named 'David' that year?__
-
 _type your results and analysis here_
+1955 was the year with the most babies named David with a total of 86389 babies
 
 _AI use reflection_
 **Link** to the original chat:
@@ -74,17 +74,17 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-# Q2
+f2 = df.filter(pl.col("name")=="David").sort("Total", descending=True).head(1)
 
-
+print(f2)
 ```
 
 
 ## QUESTION 3
 
 __What year did your name hit its peak? How many babies were named your name in that year?__
-
 _type your results and analysis here_
+2009 was the year that my name Jayden hit its peak. There were 19065 babies named Jayden that year.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -92,16 +92,17 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-# Q3
+f3 = df.filter(pl.col("name")=="Jayden").sort("Total", descending=True).head(1)
 
+print(f3)
 ```
 
 
 ## QUESTION 4
 
 __In the most recent year, what was the most common female name in Utah?__ 
-
 _type your results and analysis here_
+In 2024 the most recent year on record the most common female name with a total of 14718 was Olivia.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -109,9 +110,9 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-# Q5
+f4 = df.select("UT", "year","name", "Total").sort(["year", "Total"], descending=[True, True]).head(10)
 
-
+print(f4)
 ```
 
 
