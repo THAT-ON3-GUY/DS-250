@@ -45,8 +45,7 @@ df.head()
 
 ## QUESTION 1
 
-__What was the earliest year that the name ‘Felisha’ was used?__
-_type your results and analysis here_
+__What was the earliest year that the name ‘Felisha’ was used?__:
 The earliest year Felisha was used was 1964
 
 _AI use reflection_
@@ -64,8 +63,7 @@ f["year"].min()
 
 ## QUESTION 2
 
-__What year had the most babies named 'David'? How many babies were named 'David' that year?__
-_type your results and analysis here_
+__What year had the most babies named 'David'? How many babies were named 'David' that year?__:
 1955 was the year with the most babies named David with a total of 86389 babies
 
 _AI use reflection_
@@ -82,8 +80,7 @@ print(f2)
 
 ## QUESTION 3
 
-__What year did your name hit its peak? How many babies were named your name in that year?__
-_type your results and analysis here_
+__What year did your name hit its peak? How many babies were named your name in that year?__:
 2009 was the year that my name Jayden hit its peak. There were 19065 babies named Jayden that year.
 
 _AI use reflection_
@@ -100,9 +97,8 @@ print(f3)
 
 ## QUESTION 4
 
-__In the most recent year, what was the most common female name in Utah?__ 
-_type your results and analysis here_
-In 2024 the most recent year on record the most common female name with a total of 14718 was Olivia.
+__In the most recent year, what was the most common female name in Utah?__ :
+In 2024 the most recent year on record the most common female name with 215 in Utah and a total of 14718 was Olivia.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -110,7 +106,7 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-f4 = df.select("UT", "year","name", "Total").sort(["year", "Total"], descending=[True, True]).head(10)
+f4 = df.select("UT", "year","name", "Total").sort(["year", "UT"], descending=[True, True]).head(10)
 
 print(f4)
 ```

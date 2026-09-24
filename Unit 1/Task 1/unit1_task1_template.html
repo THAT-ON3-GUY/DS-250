@@ -2262,7 +2262,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
   <li><a href="#question-4" id="toc-question-4">QUESTION 4</a></li>
   </ul>
 </nav>
-<div id="dcbe61ba" class="cell" data-execution_count="1">
+<div id="d15566b4" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -2272,7 +2272,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>LetsPlot.setup_html(isolated_frame<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="37e3f5ff" class="cell" data-execution_count="2">
+<div id="2fbe8120" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html</span></span>
@@ -2281,7 +2281,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pl.read_csv(<span class="st">&quot;https://posit.byui.edu/content/0d43d66f-d3b7-4c43-8c36-52e3ed69e7f1/names_year_csv.csv&quot;</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="b44e88f2" class="cell" data-execution_count="3">
+<div id="6a19d48f" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.head()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2698,9 +2698,9 @@ white-space: pre-wrap;
 </div>
 <section id="question-1" class="level2">
 <h2 class="anchored" data-anchor-id="question-1">QUESTION 1</h2>
-<p><strong>What was the earliest year that the name ‘Felisha’ was used?</strong> <em>type your results and analysis here</em> The earliest year Felisha was used was 1964</p>
+<p><strong>What was the earliest year that the name ‘Felisha’ was used?</strong>: The earliest year Felisha was used was 1964</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="bd46e3a6" class="cell" data-execution_count="4">
+<div id="f81e0f5d" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>f <span class="op">=</span> df.<span class="bu">filter</span>(pl.col(<span class="st">&quot;name&quot;</span>)<span class="op">==</span><span class="st">&quot;Felisha&quot;</span>).select(pl.col(<span class="st">&quot;name&quot;</span>),(<span class="st">&quot;year&quot;</span>),(<span class="st">&quot;Total&quot;</span>)).sort(<span class="st">&quot;year&quot;</span>)</span>
@@ -2714,9 +2714,9 @@ white-space: pre-wrap;
 </section>
 <section id="question-2" class="level2">
 <h2 class="anchored" data-anchor-id="question-2">QUESTION 2</h2>
-<p><strong>What year had the most babies named ‘David’? How many babies were named ‘David’ that year?</strong> <em>type your results and analysis here</em> 1955 was the year with the most babies named David with a total of 86389 babies</p>
+<p><strong>What year had the most babies named ‘David’? How many babies were named ‘David’ that year?</strong>: 1955 was the year with the most babies named David with a total of 86389 babies</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="b9e103aa" class="cell" data-execution_count="5">
+<div id="01ae62a3" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>f2 <span class="op">=</span> df.<span class="bu">filter</span>(pl.col(<span class="st">&quot;name&quot;</span>)<span class="op">==</span><span class="st">&quot;David&quot;</span>).sort(<span class="st">&quot;Total&quot;</span>, descending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">1</span>)</span>
@@ -2737,9 +2737,9 @@ white-space: pre-wrap;
 </section>
 <section id="question-3" class="level2">
 <h2 class="anchored" data-anchor-id="question-3">QUESTION 3</h2>
-<p><strong>What year did your name hit its peak? How many babies were named your name in that year?</strong> <em>type your results and analysis here</em> 2009 was the year that my name Jayden hit its peak. There were 19065 babies named Jayden that year.</p>
+<p><strong>What year did your name hit its peak? How many babies were named your name in that year?</strong>: 2009 was the year that my name Jayden hit its peak. There were 19065 babies named Jayden that year.</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="4310b489" class="cell" data-execution_count="6">
+<div id="98b7d2cc" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>f3 <span class="op">=</span> df.<span class="bu">filter</span>(pl.col(<span class="st">&quot;name&quot;</span>)<span class="op">==</span><span class="st">&quot;Jayden&quot;</span>).sort(<span class="st">&quot;Total&quot;</span>, descending<span class="op">=</span><span class="va">True</span>).head(<span class="dv">1</span>)</span>
@@ -2760,12 +2760,12 @@ white-space: pre-wrap;
 </section>
 <section id="question-4" class="level2">
 <h2 class="anchored" data-anchor-id="question-4">QUESTION 4</h2>
-<p><strong>In the most recent year, what was the most common female name in Utah?</strong> <em>type your results and analysis here</em> In 2024 the most recent year on record the most common female name with a total of 14718 was Olivia.</p>
+<p><strong>In the most recent year, what was the most common female name in Utah?</strong> : In 2024 the most recent year on record the most common female name with 215 in Utah and a total of 14718 was Olivia.</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="6775cb48" class="cell" data-execution_count="7">
+<div id="67921ffa" class="cell" data-execution_count="7">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>f4 <span class="op">=</span> df.select(<span class="st">&quot;UT&quot;</span>, <span class="st">&quot;year&quot;</span>,<span class="st">&quot;name&quot;</span>, <span class="st">&quot;Total&quot;</span>).sort([<span class="st">&quot;year&quot;</span>, <span class="st">&quot;Total&quot;</span>], descending<span class="op">=</span>[<span class="va">True</span>, <span class="va">True</span>]).head(<span class="dv">10</span>)</span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>f4 <span class="op">=</span> df.select(<span class="st">&quot;UT&quot;</span>, <span class="st">&quot;year&quot;</span>,<span class="st">&quot;name&quot;</span>, <span class="st">&quot;Total&quot;</span>).sort([<span class="st">&quot;year&quot;</span>, <span class="st">&quot;UT&quot;</span>], descending<span class="op">=</span>[<span class="va">True</span>, <span class="va">True</span>]).head(<span class="dv">10</span>)</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(f4)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
@@ -2776,15 +2776,15 @@ white-space: pre-wrap;
 │ --- ┆ ---  ┆ ---       ┆ ---   │
 │ i64 ┆ i64  ┆ str       ┆ i64   │
 ╞═════╪══════╪═══════════╪═══════╡
-│ 260 ┆ 2024 ┆ Liam      ┆ 22164 │
-│ 215 ┆ 2024 ┆ Noah      ┆ 20837 │
 │ 285 ┆ 2024 ┆ Oliver    ┆ 15343 │
+│ 260 ┆ 2024 ┆ Liam      ┆ 22164 │
+│ 238 ┆ 2024 ┆ Henry     ┆ 11547 │
+│ 218 ┆ 2024 ┆ William   ┆ 10596 │
 │ 215 ┆ 2024 ┆ Olivia    ┆ 14718 │
-│ 175 ┆ 2024 ┆ Emma      ┆ 13485 │
-│ 174 ┆ 2024 ┆ Amelia    ┆ 12740 │
+│ 215 ┆ 2024 ┆ Noah      ┆ 20837 │
+│ 212 ┆ 2024 ┆ Jack      ┆ 8434  │
+│ 196 ┆ 2024 ┆ James     ┆ 11809 │
 │ 189 ┆ 2024 ┆ Charlotte ┆ 12552 │
-│ 152 ┆ 2024 ┆ Mia       ┆ 12113 │
-│ 123 ┆ 2024 ┆ Sophia    ┆ 12088 │
 │ 183 ┆ 2024 ┆ Theodore  ┆ 12011 │
 └─────┴──────┴───────────┴───────┘</code></pre>
 </div>

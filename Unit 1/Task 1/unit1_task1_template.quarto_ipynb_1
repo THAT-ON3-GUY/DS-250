@@ -1,0 +1,204 @@
+{
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---\n",
+        "title: \"Client Report - Exploring Names\"\n",
+        "subtitle: \"Unit 1 Task 1\"\n",
+        "author: \"Jayden Pope\"\n",
+        "format:\n",
+        "  html:\n",
+        "    self-contained: true\n",
+        "    page-layout: full\n",
+        "    title-block-banner: true\n",
+        "    toc: true\n",
+        "    toc-depth: 3\n",
+        "    toc-location: body\n",
+        "    number-sections: false\n",
+        "    html-math-method: katex\n",
+        "    code-fold: true\n",
+        "    code-summary: \"Show the code\"\n",
+        "    code-overflow: wrap\n",
+        "    code-copy: hover\n",
+        "    code-tools:\n",
+        "        source: false\n",
+        "        toggle: true\n",
+        "        caption: See code\n",
+        "execute: \n",
+        "  warning: false\n",
+        "    \n",
+        "---"
+      ],
+      "id": "27a49e36"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "import polars as pl\n",
+        "import numpy as np\n",
+        "from lets_plot import *\n",
+        "\n",
+        "LetsPlot.setup_html(isolated_frame=True)"
+      ],
+      "id": "6109e183",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html\n",
+        "\n",
+        "# Include and execute your code here\n",
+        "df = pl.read_csv(\"https://posit.byui.edu/content/0d43d66f-d3b7-4c43-8c36-52e3ed69e7f1/names_year_csv.csv\")"
+      ],
+      "id": "80b1ca80",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "df.head()"
+      ],
+      "id": "efa6b293",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION 1\n",
+        "\n",
+        "__What was the earliest year that the name ‘Felisha’ was used?__:\n",
+        "The earliest year Felisha was used was 1964\n",
+        "\n",
+        "_AI use reflection_\n",
+        "**Link** to the original chat:\n",
+        "**The Process** How exactly did you use the tool?\n",
+        "**The Impact**  How did using AI impact your learning?"
+      ],
+      "id": "96a3e0bd"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "f = df.filter(pl.col(\"name\")==\"Felisha\").select(pl.col(\"name\"),(\"year\"),(\"Total\")).sort(\"year\")\n",
+        "\n",
+        "f[\"year\"].min()"
+      ],
+      "id": "b611a515",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION 2\n",
+        "\n",
+        "__What year had the most babies named 'David'? How many babies were named 'David' that year?__:\n",
+        "1955 was the year with the most babies named David with a total of 86389 babies\n",
+        "\n",
+        "_AI use reflection_\n",
+        "**Link** to the original chat:\n",
+        "**The Process** How exactly did you use the tool?\n",
+        "**The Impact**  How did using AI impact your learning?"
+      ],
+      "id": "94771d98"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "f2 = df.filter(pl.col(\"name\")==\"David\").sort(\"Total\", descending=True).head(1)\n",
+        "\n",
+        "print(f2)"
+      ],
+      "id": "5fdf1b11",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION 3\n",
+        "\n",
+        "__What year did your name hit its peak? How many babies were named your name in that year?__:\n",
+        "2009 was the year that my name Jayden hit its peak. There were 19065 babies named Jayden that year.\n",
+        "\n",
+        "_AI use reflection_\n",
+        "**Link** to the original chat:\n",
+        "**The Process** How exactly did you use the tool?\n",
+        "**The Impact**  How did using AI impact your learning?"
+      ],
+      "id": "22d33052"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "f3 = df.filter(pl.col(\"name\")==\"Jayden\").sort(\"Total\", descending=True).head(1)\n",
+        "\n",
+        "print(f3)"
+      ],
+      "id": "ef19c2cb",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "## QUESTION 4\n",
+        "\n",
+        "__In the most recent year, what was the most common female name in Utah?__ :\n",
+        "In 2024 the most recent year on record the most common female name with 215 in Utah and a total of 14718 was Olivia.\n",
+        "\n",
+        "_AI use reflection_\n",
+        "**Link** to the original chat:\n",
+        "**The Process** How exactly did you use the tool?\n",
+        "**The Impact**  How did using AI impact your learning?"
+      ],
+      "id": "399e6b9b"
+    },
+    {
+      "cell_type": "code",
+      "metadata": {},
+      "source": [
+        "f4 = df.select(\"UT\", \"year\",\"name\", \"Total\").sort([\"year\", \"UT\"], descending=[True, True]).head(10)\n",
+        "\n",
+        "print(f4)"
+      ],
+      "id": "b2657f65",
+      "execution_count": null,
+      "outputs": []
+    },
+    {
+      "cell_type": "markdown",
+      "metadata": {},
+      "source": [
+        "---"
+      ],
+      "id": "188bc67a"
+    }
+  ],
+  "metadata": {
+    "kernelspec": {
+      "name": "python3",
+      "language": "python",
+      "display_name": "Python 3 (ipykernel)",
+      "path": "C:\\Users\\EFSAdmin\\AppData\\Local\\Python\\pythoncore-3.14-64\\share\\jupyter\\kernels\\python3"
+    }
+  },
+  "nbformat": 4,
+  "nbformat_minor": 5
+}
