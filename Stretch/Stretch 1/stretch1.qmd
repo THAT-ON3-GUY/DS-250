@@ -1,0 +1,71 @@
+---
+title: "Stretch Task 1"
+subtitle: ""
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+df = pl.read_csv("https://posit.byui.edu/content/0d43d66f-d3b7-4c43-8c36-52e3ed69e7f1/names_year_csv.csv")
+```
+
+```{python}
+# Q1
+elliot = df.filter(pl.col("name") == "Elliot").select("name", "year", "Total")
+
+labels = pl.DataFrame({
+    "year":  [1982 - 0.5, 1984 + 0.5, 2002 + 0.5],   # small offset so text doesn't touch the line
+    "label": ["E.T. Released", "Second Release", "Third Release"],
+    "hjust": [1, 0, 0]                               # 1 = left of line, 0 = right of line
+})
+
+
+(ggplot(elliot, aes(x="year", y="Total", color="name"))
++ geom_line(size=1)
++ scale_color_manual(values=["blue"])
++ geom_vline(color="red", xintercept=1982,linetype="dashed", size=1) 
++ geom_vline(color="red", xintercept=1984,linetype="dashed", size=1)
++ geom_vline(color="red", xintercept=2002, linetype="dashed", size=1)
++ labs(title="Elliot...What?", x="year", y="")
++ scale_x_continuous(format="d", expand=(0,0), breaks=np.arange(1950, 2031, 10))
++ scale_y_continuous(breaks=np.arange(0, 30001, 500), limits=[-100, 3200], expand=[0, 0])
++ xlim(1950)
++ theme_gray()
++ theme(axis_ticks=element_blank(), panel_grid_minor=element_blank(), legend_justification=[0,1], plot_title_position="plot", axis_text=element_text(family="Merriweather"), plot_title=element_text(family="Merriweather", hjust=0), legend_title=element_text(family="Merriweather"),
+legend_text=element_text(family="Merriweather"),
+axis_title=element_text(family="Merriweather"))
++ geom_text(aes(x="year", label="label", hjust="hjust"), data=labels, y=3000, size=7, color="#444444", inherit_aes=False, show_legend=False)
+)
+
+```
