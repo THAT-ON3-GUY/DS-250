@@ -50,7 +50,7 @@ df = pl.read_json(io.BytesIO(response.content))
 
 __Calculate the sample size (i.e. number of rows in the dataset) for each airport in each year__. What do you notice?
 
-_Describe your results and analysis here_
+While the sample size flucuates up or down a tad on occassion for the most part the sample size stays the same throughout the duration of collected data.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -58,16 +58,18 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-df.group_by("airport_name", "year").len().sort("year")
+row_perport_peryear = df.filter(pl.col("airport_name") != "").group_by("airport_name", "year").len().sort("airport_name", "year")
+```
 
-
+```{python}
+row_perport_peryear
 ```
 
 ## QUESTION 2
 
 __Which airport has the worst delays?__ Describe the metric you chose, and why you chose it to determine the “worst” airport. Your answer should include a summary table that lists (for each airport) the total number of flights, total number of delayed flights, proportion of delayed flights, and average delay time in hours. 
 
-_Describe your results and analysis here_
+I chose the airport that is the "worst" based on the proportion of their flights overall that are delayed and in turn how much the average flight is delayed (I used the total number of flights instead of just the total number of delayed flights to account for the fact that you can't assume a flight won't be delayed for one reason or another) The airport that is the worst is the San Francisco, California Airport. With a total delay proportion of .26 or about 26% of all flights being delayed and an average delay of .27 hours or around a 20 minute delay for any flight.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -75,16 +77,22 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-# Include and execute your code here
+airport_proportions = df.filter(pl.col("airport_name") != "")
+```
 
+```{python}
+delays_summary = airport_proportions.group_by(["airport_code", "airport_name"]).agg(pl.col("num_of_flights_total").sum(), pl.col("num_of_delays_total").sum(), (pl.col("num_of_delays_total").sum() / pl.col("num_of_flights_total").sum()).alias("delayed_flight_proportion"), (pl.col("minutes_delayed_total").sum() / 60 / pl.col("num_of_flights_total").sum()).alias("average_hours_delayed")).sort(["delayed_flight_proportion", "average_hours_delayed"], descending=True)
+```
 
+```{python}
+delays_summary
 ```
 
 ## QUESTION 3
 
 __Create a barplot showing the proportion of all flights that are delayed at each airport. Describe what you learn from this graph.__  
 
-_Describe your results and analysis here_
+This graph not only reaffirms my opinion on the San Francisco, California, airport, but it also shows the margins of difference in delays between each airport. This shows that the Salt Lake City, Utah airport has the least amount of delays proportionally.
 
 _AI use reflection_
 **Link** to the original chat:
@@ -92,7 +100,5 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
-# Include and execute your code here
-
-
+ggplot(delays_summary) + aes(x="airport_code", y="delayed_flight_proportion") + geom_bar(stat="identity") + labs(title="Proportion of Delays by Airport", x="Airports", y="Proportion of Delayed Flights")
 ```
