@@ -1,0 +1,126 @@
+---
+title: "Client Report - Missing values"
+subtitle: "Unit 2 Task 3"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import requests #new for reading in JSON
+import io       #new for reading in JSON
+import numpy as np
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+url = "https://raw.githubusercontent.com/byuidatascience/data4missing/master/data-raw/flights_missing/flights_missing.json"
+response = requests.get(url)
+df = pl.read_json(io.BytesIO(response.content))
+```
+
+## QUESTION 1
+
+1. __Convert values to missing__ Start with a fresh copy of the flights dataset by reading it in from the link provided above (as opposed to starting with the dataset you ended with in the last assignment). Identify data values that are problematic, non-sense or impossible and change them to be missing. In your report include one record example (one row) from your clean data, in the raw JSON format. Your example should display at least one missing value so that we can verify it was done correctly. (Note: JSON will convert NaN's to null). Describe your process for finding values that needed to be changed, and how you changed them.
+
+I initially ran .describe on the original dataframe to look for inital issues that could be found in places like the min or max sections. This along with the fact that certain columns appeared to be in abnormal datatypes or just apparently contained incorrect data from a regular printing of the dataframe gave me a couple things to work on. I used replace statements to get rid of these errors and then ran .describe on the new modified dataframe to again look for errors in the data. I then repeated the process of replacing problem values with None until I couldn't find any more.
+
+Here is my line of raw JSON:
+[{"airport_code":"ATL","airport_name":"Atlanta, GA: Hartsfield-Jackson Atlanta International","month":"January","year":2005,"num_of_flights_total":35048,"num_of_delays_carrier":null,"num_of_delays_late_aircraft":null,"num_of_delays_nas":4598,"num_of_delays_security":10,"num_of_delays_weather":448,"num_of_delays_total":8355,"minutes_delayed_carrier":116423,"minutes_delayed_late_aircraft":104415,"minutes_delayed_nas":207467,"minutes_delayed_security":297,"minutes_delayed_weather":36931,"minutes_delayed_total":465533}]
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+df.describe()
+```
+```{python}
+# Include and execute your code here
+removed = df.with_columns(
+  pl.col("month").replace("n/a", None),
+  pl.col("num_of_delays_carrier").replace("1500+", None).cast(pl.Int64),
+  pl.col("num_of_delays_late_aircraft").replace(-999, None),
+  pl.col("minutes_delayed_nas").replace(-999, None),
+  pl.col("airport_name").replace("", None)
+)
+```
+```{python}
+print(removed.slice(0,1).write_json())
+```
+## QUESTION 2
+
+2. __Filling in missing data__ For all the "minutes_delayed" columns, fill in any missing values with the median of that column. For the "num_of" columns, fill in missing values with that column's mean.
+
+_Nothing to write/report for this question_
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+filled = removed.with_columns(
+  pl.col("minutes_delayed_nas").fill_null(pl.col("minutes_delayed_nas").median()),
+  pl.col(["num_of_delays_carrier", "num_of_delays_late_aircraft"]).fill_null(strategy="mean")
+)
+```
+
+## QUESTION 3
+ 
+3. __Display a histogram for num_of_delays_carrier and for minutes_delayed_nas (2 separate histograms in total). Comment on the shape of each one. Also report the mean of each of these columns now that missing values have been filled in.__
+
+Carrier delays are well spread out in their amounts with all values having a gradual downward trend starting with a lower number of delays decreasing towards larger numbers the interesting thing is there is a massive spike at 696.6 delays which is extremely close to the mean number of carrier delays of 691.27 delays.
+
+On the other hand with the NAS delays the large majority of delays are on the smaller side with the most common length of a delay being 18,790.5 minutes but the major difference between this set and the Carrier Delays is that the drastic outliers present in the data has caused the mean number of minutes delayed to be 69682.66 minutes.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+carrier =(ggplot(filled, aes("num_of_delays_carrier")) 
++ geom_histogram(bins=30)
++ labs(title="Carrier Delays", x="Number of Delays", y="Count")
+)
+
+nas = (ggplot(filled, aes("minutes_delayed_nas"))
++ geom_histogram(bins=30)
++ labs(title="NAS Delays ", x="Delay Length (In Minutes)", y="Number of Delays")
+)
+
+filled.select([pl.col("num_of_delays_carrier").mean(), pl.col("minutes_delayed_nas").mean()])
+```
+
+```{python}
+carrier
+```
+
+```{python}
+nas
+```
