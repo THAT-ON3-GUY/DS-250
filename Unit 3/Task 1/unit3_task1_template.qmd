@@ -1,0 +1,118 @@
+---
+title: "Client Report - Baseball Database"
+subtitle: "Unit 3 Task 1"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import numpy as np
+import sqlite3
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+sqlite_file = 'lahmansbaseballdb.sqlite'
+# this file must be in the same location as your .qmd or .py file
+con = sqlite3.connect(sqlite_file)
+```
+
+```{python}
+# Include and execute your code here
+
+# The code below uses some basic SQL code to read in the entire 'batting' table in the database and store it in a polars dataframe called 'results'. You must write polars code to manipulate the results dataframe to address the task.
+
+q = """
+    SELECT *
+    FROM batting
+    """
+results = pl.read_database(q, con, infer_schema_length=None) 
+# What does infer_schema_length = None do?
+results
+```
+
+## QUESTION 1
+
+__Use the provided code above to read in the batting table. Then, with Python Polars manipulate the 'results' dataframe to calculate the number of at bats and the batting average for each year a player played. Filter the data frame to only include players with at least 10 at bats that year. Sort the dataframe from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.__
+
+Note: A batting average is meant to measure how often a player puts the ball in play and gets to base safely. For this task, use a simplified version of batting average defined as the sum of hits (labeled 'H') divided by number of at bats (labeled 'AB').
+
+Out of the data found, it was interesting to see that the top 5 results were all from different players and a wide range of years. The highest Batting Average I found for a player was 0.643 in the year 1974 tied to the player with the id "nymanny01"
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+yearly = ( 
+  results
+  .group_by(["playerID", "yearID"])
+  .agg(pl.col("AB").sum().alias("total_AB"), 
+  pl.col("H").sum().alias("total_H"), )
+  .with_columns(batting_average= pl.col("total_H") / pl.col("total_AB"))
+  .sort(["batting_average", "playerID"], descending=[True, False])
+  .filter(pl.col("total_AB") >= 10)
+  ).head(5)
+```
+```{python}
+yearly
+```
+
+
+## QUESTION 2
+
+__Use the provided code above to read in the batting table. Then, with Python Polars manipulate the 'results' dataframe to calculate the batting average for each player over their entire career (all years combined). Only include players with at least 100 at bats over their entire career. Sort the dataframe from highest batting average to lowest, and then by playerid alphabetically. Show the top 5 results in your report.__ 
+
+Note: A batting average is meant to measure how often a player puts the ball in play and gets to base safely. For this task, use a simplified version of batting average defined as the sum of hits (labeled 'H') divided by number of at bats (labeled 'AB').
+
+Out of the data I found, I found it quite interesting how consistent the Batting Averages were. Despite a large varity in total hits and total at bats, the Batting Average for the top 5 hover around the 0.355 - 0.36 range, the top batter id "cobbty01" being the only player to actually break into the 0.36 threshold with an average of 0.366. 
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+player = ( 
+  results
+  .group_by("playerID")
+  .agg(pl.col("AB").sum().alias("total_AB"), 
+  pl.col("H").sum().alias("total_H"), )
+  .with_columns(batting_average= pl.col("total_H") / pl.col("total_AB"))
+  .sort(["batting_average", "playerID"], descending=[True, False])
+  .filter(pl.col("total_AB") >= 100)
+  ).head(5)
+```
+
+```{python}
+player
+```
+
