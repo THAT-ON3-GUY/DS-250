@@ -1,0 +1,133 @@
+---
+title: "Client Report - Joins"
+subtitle: "Unit 3 Task 3"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import numpy as np
+import sqlite3
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+sqlite_file = 'lahmansbaseballdb.sqlite'
+# this file must be in the same location as your .qmd or .py file
+con = sqlite3.connect(sqlite_file)
+```
+
+## QUESTION 1
+
+__Write an SQL query that pulls in the the salaries table and the collegeplaying table (and any other tables you might need) and store them in polars dataframes. In Python Polars, combine the dataframes to create a list of baseball players who attended BYU-Idaho. The new table should contain five columns: playerID, schoolID, salary, yearID and teamID associated with each salary.__
+
+The table shows that even the same player depending on the year could be paid quite a different amount.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+q = """
+    select playerID, yearID, teamID, salary
+    from salaries
+    """
+r = """
+    select playerID, schoolID
+    from collegeplaying
+    """
+
+salaries = pl.read_database(q, con, infer_schema_length=None)
+collegeplaying = pl.read_database(r, con, infer_schema_length=None)
+
+results = (
+  collegeplaying
+  .filter(pl.col("schoolID") == "idbyuid")
+  .unique()
+  .join(salaries, on="playerID", how="inner")
+  .select("playerID", "schoolID", "salary", "yearID", "teamID")
+  .sort("playerID", "yearID", "salary")
+)
+```
+
+```{python}
+results
+```
+
+## QUESTION 2
+
+1. Pick any two baseball teams and compare them using a metric of your choice (average salary, home runs, number of wins, etc). Be creative! Write an SQL query to read in the table(s) you need, then use polars to manipulate the data. Finally, make a graph using Lets-Plot to visualize the comparison. What do you learn?
+
+The average salary for players on the ATL team vs the SEA team stayed pretty similar for the majority of recorded data before having a significant split in 2014 where ATL's average dropped and SEA's average shot up. This left SEA with a per player salary of $4.8M while ATL had an average of $2.4M per player in the last recorded year 2016.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+q = """
+    select yearID, teamID, salary
+    from salaries
+    """
+salaries = pl.read_database(q, con, infer_schema_length=None)
+
+
+avg_salary = (
+  salaries
+  .group_by(["teamID", "yearID"])
+  .agg(pl.col("salary").sum().alias("team_salary"),
+  pl.col("salary").count().alias("salary_count"))
+  .with_columns(average_salary=pl.col("team_salary") / pl.col("salary_count"))
+  .sort(["teamID", "yearID"], descending=[False, True])
+  .filter(pl.col("teamID").is_in(["SEA", "ATL"]))
+
+)
+
+salary_plot =(
+  ggplot(avg_salary, aes(x="yearID", y="average_salary", color="teamID"))
+  + geom_line()
+  + scale_x_continuous(format="d")
+  + scale_y_continuous(format="$.2s")
+  + labs(
+    title="Average Player Salary for SEA vs ATL",
+    x="Year",
+    y="Average Salary by Year (millions $)",
+    color="Team"
+  )
+)
+```
+
+```{python}
+salary_plot
+```
+
+
