@@ -1,0 +1,164 @@
+---
+title: "Client Report - Baseball Database"
+subtitle: "Stretch Task 3"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute:
+  warning: false
+
+---
+
+```{python}
+import polars as pl
+import numpy as np
+import sqlite3
+from lets_plot import *
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+# Learn morea about Code Cells: https://quarto.org/docs/reference/cells/cells-jupyter.html
+
+# Include and execute your code here
+sqlite_file = 'lahmansbaseballdb.sqlite'
+# this file must be in the same location as your .qmd or .py file
+con = sqlite3.connect(sqlite_file)
+```
+
+
+## QUESTION 1
+
+__Write an SQL query that pulls the tables you need into a polars dataframe using nothing more than SELECT and FROM statements. Then, use python polars to identify the top 10 players with the longest Major League Baseball careers. Include their: playerID, first_name, last_name, career_length.__
+
+Career length is measured in years from a player's MLB debut to his final game (days between the two dates divided by 365.25). Players missing either date are left out.
+
+Nick Altrock has the longest career at just over 35 years. Many of the names at the top, like Altrock and Minnie Minoso, made brief comeback appearances late in life, which stretches the gap between their debut and final game.
+
+```{python}
+q = """
+    SELECT *
+    FROM people
+    """
+people = pl.read_database(q, con, infer_schema_length=None)
+```
+
+```{python}
+career = (
+    people
+    .with_columns(
+        pl.col("debut").str.to_date(strict=False).alias("debut_dt"),
+        pl.col("finalGame").str.to_date(strict=False).alias("final_dt"),
+    )
+    .filter(pl.col("debut_dt").is_not_null() & pl.col("final_dt").is_not_null())
+    .with_columns(
+        ((pl.col("final_dt") - pl.col("debut_dt")).dt.total_days() / 365.25)
+        .round(2)
+        .alias("career_length")
+    )
+    .select(
+        "playerID",
+        pl.col("nameFirst").alias("first_name"),
+        pl.col("nameLast").alias("last_name"),
+        "career_length",
+    )
+    .sort(["career_length", "playerID"], descending=[True, False])
+    .head(10)
+)
+career
+```
+
+
+
+## QUESTION 2
+
+__Write an SQL query that pulls the tables you need into a polars dataframe. Then, use python polars to create a summary table showing the average salary for each position (e.g., pitcher, catcher, outfielder). Position information can be found in the fielding table in the POS column. Include the following columns: position, average_salary, total_players, highest_salary. The highest_salary column should display the highest salary ever earned by a player in that position.__
+
+__Additionally, add a new column to the summary table you just created to label the average salary: If the average salary is above $3 million, categorize it as "High Salary." If the average salary is between $2 million and $3 million, categorize it as "Medium Salary." Otherwise, categorize it as "Low Salary." Order the table by average salary in descending order.__
+
+First basemen earn the most on average (about $3.35 million) and are the only "High Salary" position. Outfielders, third basemen and shortstops land in "Medium Salary." Pitchers, second basemen and catchers fall in "Low Salary." Catchers have the lowest average at about $1.44 million. The highest single-season salary, $33 million, was earned at both third base and pitcher.
+
+```{python}
+q = """
+    SELECT playerID, yearID, POS, G
+    FROM fielding
+    """
+fielding = pl.read_database(q, con, infer_schema_length=None)
+```
+
+```{python}
+q = """
+    SELECT playerID, yearID, salary
+    FROM salaries
+    """
+salaries = pl.read_database(q, con, infer_schema_length=None)
+```
+
+```{python}
+# One position per player per year: the position he played the most games at
+primary_pos = (
+    fielding
+    .group_by(["playerID", "yearID", "POS"])
+    .agg(pl.col("G").sum().alias("games"))  # combine stints with different teams
+    .sort(
+        ["playerID", "yearID", "games", "POS"],
+        descending=[False, False, True, False],
+    )
+    .group_by(["playerID", "yearID"], maintain_order=True)
+    .first()
+)
+
+# One salary per player per year (players traded mid-season can have two rows)
+player_salary = (
+    salaries
+    .group_by(["playerID", "yearID"])
+    .agg(pl.col("salary").sum())
+)
+
+salary_by_pos = player_salary.join(primary_pos, on=["playerID", "yearID"], how="inner")
+
+summary = (
+    salary_by_pos
+    .group_by("POS")
+    .agg(
+        pl.col("salary").mean().round(0).cast(pl.Int64).alias("average_salary"),
+        pl.col("playerID").n_unique().alias("total_players"),
+        pl.col("salary").max().cast(pl.Int64).alias("highest_salary"),
+    )
+    .rename({"POS": "position"})
+    .with_columns(
+        pl.when(pl.col("average_salary") > 3_000_000)
+        .then(pl.lit("High Salary"))
+        .when(pl.col("average_salary") >= 2_000_000)
+        .then(pl.lit("Medium Salary"))
+        .otherwise(pl.lit("Low Salary"))
+        .alias("salary_category")
+    )
+    .sort("average_salary", descending=True)
+)
+summary
+```
+
+__How I chose one position per player per year:__ When a player appeared at more than one position in a season, I counted his salary toward the position where he played the most games that year. I added up games across all of his stints first, so a player traded mid-season is judged on his whole year. If two positions tied on games, I picked the first one alphabetically so the result is always the same.
+
+This is a good approach because games played shows what a team actually used the player for, and that is what they were paying him to do. A shortstop who filled in at second base for a few games is still paid like a shortstop. It also makes sure each salary is counted exactly once, so no position's average is inflated by double-counting players who moved around the field. Because a traded player can have two salary rows in one year, I also added those together so each player has a single salary per season.
+
+Note that `total_players` counts the unique players whose salary was assigned to that position in at least one season. A player whose main position changed over his career (for example, from outfield to first base) counts toward each position he held.
