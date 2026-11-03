@@ -84,12 +84,17 @@ _AI use reflection_
 **The Impact**  How did using AI impact your learning?
 
 ```{python}
+cols = ["minutes_delayed_nas", "minutes_delayed_carrier", "minutes_delayed_late_aircraft", "minutes_delayed_security", "minutes_delayed_weather", "minutes_delayed_total"]
+
 filled = removed.with_columns(
-  pl.col("minutes_delayed_nas").fill_null(pl.col("minutes_delayed_nas").median()),
+  pl.col(cols).fill_null(pl.col(cols).median()),
   pl.col(["num_of_delays_carrier", "num_of_delays_late_aircraft"]).fill_null(strategy="mean")
 )
 ```
 
+```{python}
+filled
+```
 ## QUESTION 3
  
 3. __Display a histogram for num_of_delays_carrier and for minutes_delayed_nas (2 separate histograms in total). Comment on the shape of each one. Also report the mean of each of these columns now that missing values have been filled in.__
