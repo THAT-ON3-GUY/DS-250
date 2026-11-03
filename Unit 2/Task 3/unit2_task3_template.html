@@ -2261,7 +2261,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
   <li><a href="#question-3" id="toc-question-3">QUESTION 3</a></li>
   </ul>
 </nav>
-<div id="740eedd7" class="cell" data-execution_count="1">
+<div id="49fb601d" class="cell" data-execution_count="1">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> polars <span class="im">as</span> pl</span>
@@ -2273,7 +2273,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>LetsPlot.setup_html(isolated_frame<span class="op">=</span><span class="va">True</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="f935b67f" class="cell" data-execution_count="2">
+<div id="7c342e3b" class="cell" data-execution_count="2">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">&quot;https://raw.githubusercontent.com/byuidatascience/data4missing/master/data-raw/flights_missing/flights_missing.json&quot;</span></span>
@@ -2289,7 +2289,7 @@ var requirejs,require,define;(function(global,setTimeout){var req,s,head,baseEle
 <p>I initially ran .describe on the original dataframe to look for inital issues that could be found in places like the min or max sections. This along with the fact that certain columns appeared to be in abnormal datatypes or just apparently contained incorrect data from a regular printing of the dataframe gave me a couple things to work on. I used replace statements to get rid of these errors and then ran .describe on the new modified dataframe to again look for errors in the data. I then repeated the process of replacing problem values with None until I couldn’t find any more.</p>
 <p>Here is my line of raw JSON: [{“airport_code”:“ATL”,“airport_name”:“Atlanta, GA: Hartsfield-Jackson Atlanta International”,“month”:“January”,“year”:2005,“num_of_flights_total”:35048,“num_of_delays_carrier”:null,“num_of_delays_late_aircraft”:null,“num_of_delays_nas”:4598,“num_of_delays_security”:10,“num_of_delays_weather”:448,“num_of_delays_total”:8355,“minutes_delayed_carrier”:116423,“minutes_delayed_late_aircraft”:104415,“minutes_delayed_nas”:207467,“minutes_delayed_security”:297,“minutes_delayed_weather”:36931,“minutes_delayed_total”:465533}]</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="3c5403ac" class="cell" data-execution_count="3">
+<div id="d7296d0d" class="cell" data-execution_count="3">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>df.describe()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2532,7 +2532,7 @@ white-space: pre-wrap;
 </div>
 </div>
 </div>
-<div id="5acf5876" class="cell" data-execution_count="4">
+<div id="33307530" class="cell" data-execution_count="4">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Include and execute your code here</span></span>
@@ -2545,7 +2545,7 @@ white-space: pre-wrap;
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
 </div>
-<div id="86c8adb7" class="cell" data-execution_count="5">
+<div id="bc5a3c7b" class="cell" data-execution_count="5">
 <details class="code-fold">
 <summary>Show the code</summary>
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(removed.<span class="bu">slice</span>(<span class="dv">0</span>,<span class="dv">1</span>).write_json())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -2562,14 +2562,286 @@ white-space: pre-wrap;
 </ol>
 <p><em>Nothing to write/report for this question</em></p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="b58a9116" class="cell" data-execution_count="6">
+<div id="63597f95" class="cell" data-execution_count="6">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>filled <span class="op">=</span> removed.with_columns(</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  pl.col(<span class="st">&quot;minutes_delayed_nas&quot;</span>).fill_null(pl.col(<span class="st">&quot;minutes_delayed_nas&quot;</span>).median()),</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  pl.col([<span class="st">&quot;num_of_delays_carrier&quot;</span>, <span class="st">&quot;num_of_delays_late_aircraft&quot;</span>]).fill_null(strategy<span class="op">=</span><span class="st">&quot;mean&quot;</span>)</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>cols <span class="op">=</span> [<span class="st">&quot;minutes_delayed_nas&quot;</span>, <span class="st">&quot;minutes_delayed_carrier&quot;</span>, <span class="st">&quot;minutes_delayed_late_aircraft&quot;</span>, <span class="st">&quot;minutes_delayed_security&quot;</span>, <span class="st">&quot;minutes_delayed_weather&quot;</span>, <span class="st">&quot;minutes_delayed_total&quot;</span>]</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>filled <span class="op">=</span> removed.with_columns(</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  pl.col(cols).fill_null(pl.col(cols).median()),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  pl.col([<span class="st">&quot;num_of_delays_carrier&quot;</span>, <span class="st">&quot;num_of_delays_late_aircraft&quot;</span>]).fill_null(strategy<span class="op">=</span><span class="st">&quot;mean&quot;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
+</div>
+<div id="88cf1684" class="cell" data-execution_count="7">
+<details class="code-fold">
+<summary>Show the code</summary>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>filled</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</details>
+<div class="cell-output cell-output-display" data-execution_count="7">
+<div><style>
+.dataframe > thead > tr,
+.dataframe > tbody > tr {
+text-align: right;
+white-space: pre-wrap;
+}
+</style>
+<small>shape: (924, 17)</small>
+<table class="dataframe caption-top table table-sm table-striped small" data-border="1">
+<thead>
+<tr class="header">
+<th data-quarto-table-cell-role="th">airport_code</th>
+<th data-quarto-table-cell-role="th">airport_name</th>
+<th data-quarto-table-cell-role="th">month</th>
+<th data-quarto-table-cell-role="th">year</th>
+<th data-quarto-table-cell-role="th">num_of_flights_total</th>
+<th data-quarto-table-cell-role="th">num_of_delays_carrier</th>
+<th data-quarto-table-cell-role="th">num_of_delays_late_aircraft</th>
+<th data-quarto-table-cell-role="th">num_of_delays_nas</th>
+<th data-quarto-table-cell-role="th">num_of_delays_security</th>
+<th data-quarto-table-cell-role="th">num_of_delays_weather</th>
+<th data-quarto-table-cell-role="th">num_of_delays_total</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_carrier</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_late_aircraft</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_nas</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_security</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_weather</th>
+<th data-quarto-table-cell-role="th">minutes_delayed_total</th>
+</tr>
+<tr class="even">
+<td>str</td>
+<td>str</td>
+<td>str</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>i64</td>
+<td>f64</td>
+<td>f64</td>
+<td>f64</td>
+<td>f64</td>
+<td>f64</td>
+<td>f64</td>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>&quot;ATL&quot;</td>
+<td>&quot;Atlanta, GA: Hartsfield-Jackso…</td>
+<td>&quot;January&quot;</td>
+<td>2005</td>
+<td>35048</td>
+<td>691</td>
+<td>1109</td>
+<td>4598</td>
+<td>10</td>
+<td>448</td>
+<td>8355</td>
+<td>116423.0</td>
+<td>104415.0</td>
+<td>207467.0</td>
+<td>297.0</td>
+<td>36931.0</td>
+<td>465533.0</td>
+</tr>
+<tr class="even">
+<td>&quot;DEN&quot;</td>
+<td>&quot;Denver, CO: Denver Internation…</td>
+<td>&quot;January&quot;</td>
+<td>2005</td>
+<td>12687</td>
+<td>1041</td>
+<td>928</td>
+<td>935</td>
+<td>11</td>
+<td>233</td>
+<td>3153</td>
+<td>53537.0</td>
+<td>70301.0</td>
+<td>36817.0</td>
+<td>363.0</td>
+<td>21779.0</td>
+<td>182797.0</td>
+</tr>
+<tr class="odd">
+<td>&quot;IAD&quot;</td>
+<td>null</td>
+<td>&quot;January&quot;</td>
+<td>2005</td>
+<td>12381</td>
+<td>414</td>
+<td>1058</td>
+<td>895</td>
+<td>4</td>
+<td>61</td>
+<td>2430</td>
+<td>38784.5</td>
+<td>70919.0</td>
+<td>35660.0</td>
+<td>208.0</td>
+<td>4497.0</td>
+<td>134881.0</td>
+</tr>
+<tr class="even">
+<td>&quot;ORD&quot;</td>
+<td>&quot;Chicago, IL: Chicago O&#39;Hare In…</td>
+<td>&quot;January&quot;</td>
+<td>2005</td>
+<td>28194</td>
+<td>1197</td>
+<td>2255</td>
+<td>5415</td>
+<td>5</td>
+<td>306</td>
+<td>9178</td>
+<td>88691.0</td>
+<td>160811.0</td>
+<td>364382.0</td>
+<td>151.0</td>
+<td>24859.0</td>
+<td>638894.0</td>
+</tr>
+<tr class="odd">
+<td>&quot;SAN&quot;</td>
+<td>&quot;San Diego, CA: San Diego Inter…</td>
+<td>&quot;January&quot;</td>
+<td>2005</td>
+<td>7283</td>
+<td>572</td>
+<td>680</td>
+<td>638</td>
+<td>7</td>
+<td>56</td>
+<td>1952</td>
+<td>27436.0</td>
+<td>38445.0</td>
+<td>21127.0</td>
+<td>218.0</td>
+<td>4326.0</td>
+<td>91552.0</td>
+</tr>
+<tr class="even">
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+<td>…</td>
+</tr>
+<tr class="odd">
+<td>&quot;IAD&quot;</td>
+<td>&quot;Washington, DC: Washington Dul…</td>
+<td>&quot;December&quot;</td>
+<td>2015</td>
+<td>2799</td>
+<td>182</td>
+<td>183</td>
+<td>61</td>
+<td>0</td>
+<td>17</td>
+<td>443</td>
+<td>38784.5</td>
+<td>15438.0</td>
+<td>2826.0</td>
+<td>0.0</td>
+<td>1825.0</td>
+<td>31164.0</td>
+</tr>
+<tr class="even">
+<td>&quot;ORD&quot;</td>
+<td>&quot;Chicago, IL: Chicago O&#39;Hare In…</td>
+<td>&quot;December&quot;</td>
+<td>2015</td>
+<td>25568</td>
+<td>923</td>
+<td>1755</td>
+<td>1364</td>
+<td>11</td>
+<td>180</td>
+<td>4233</td>
+<td>80962.0</td>
+<td>132055.0</td>
+<td>72045.0</td>
+<td>435.0</td>
+<td>22459.0</td>
+<td>307956.0</td>
+</tr>
+<tr class="odd">
+<td>&quot;SAN&quot;</td>
+<td>&quot;San Diego, CA: San Diego Inter…</td>
+<td>null</td>
+<td>2015</td>
+<td>6231</td>
+<td>480</td>
+<td>606</td>
+<td>256</td>
+<td>5</td>
+<td>37</td>
+<td>1383</td>
+<td>25402.0</td>
+<td>35796.0</td>
+<td>9038.0</td>
+<td>161.0</td>
+<td>2742.0</td>
+<td>73139.0</td>
+</tr>
+<tr class="even">
+<td>&quot;SFO&quot;</td>
+<td>&quot;San Francisco, CA: San Francis…</td>
+<td>&quot;December&quot;</td>
+<td>2015</td>
+<td>13833</td>
+<td>757</td>
+<td>1180</td>
+<td>2372</td>
+<td>9</td>
+<td>147</td>
+<td>4465</td>
+<td>55283.0</td>
+<td>96703.0</td>
+<td>193525.0</td>
+<td>285.0</td>
+<td>13788.0</td>
+<td>359584.0</td>
+</tr>
+<tr class="odd">
+<td>&quot;SLC&quot;</td>
+<td>&quot;Salt Lake City, UT: Salt Lake …</td>
+<td>&quot;December&quot;</td>
+<td>2015</td>
+<td>8804</td>
+<td>483</td>
+<td>796</td>
+<td>404</td>
+<td>5</td>
+<td>56</td>
+<td>1745</td>
+<td>37354.0</td>
+<td>49549.0</td>
+<td>13515.0</td>
+<td>158.0</td>
+<td>6693.0</td>
+<td>107269.0</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
 </div>
 </section>
 <section id="question-3" class="level2">
@@ -2580,22 +2852,22 @@ white-space: pre-wrap;
 <p>Carrier delays are well spread out in their amounts with all values having a gradual downward trend starting with a lower number of delays decreasing towards larger numbers the interesting thing is there is a massive spike at 696.6 delays which is extremely close to the mean number of carrier delays of 691.27 delays.</p>
 <p>On the other hand with the NAS delays the large majority of delays are on the smaller side with the most common length of a delay being 18,790.5 minutes but the major difference between this set and the Carrier Delays is that the drastic outliers present in the data has caused the mean number of minutes delayed to be 69682.66 minutes.</p>
 <p><em>AI use reflection</em> <strong>Link</strong> to the original chat: <strong>The Process</strong> How exactly did you use the tool? <strong>The Impact</strong> How did using AI impact your learning?</p>
-<div id="272ffa18" class="cell" data-execution_count="7">
+<div id="0690446b" class="cell" data-execution_count="8">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>carrier <span class="op">=</span>(ggplot(filled, aes(<span class="st">&quot;num_of_delays_carrier&quot;</span>)) </span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> labs(title<span class="op">=</span><span class="st">&quot;Carrier Delays&quot;</span>, x<span class="op">=</span><span class="st">&quot;Number of Delays&quot;</span>, y<span class="op">=</span><span class="st">&quot;Count&quot;</span>)</span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>nas <span class="op">=</span> (ggplot(filled, aes(<span class="st">&quot;minutes_delayed_nas&quot;</span>))</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">30</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> labs(title<span class="op">=</span><span class="st">&quot;NAS Delays &quot;</span>, x<span class="op">=</span><span class="st">&quot;Delay Length (In Minutes)&quot;</span>, y<span class="op">=</span><span class="st">&quot;Number of Delays&quot;</span>)</span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>filled.select([pl.col(<span class="st">&quot;num_of_delays_carrier&quot;</span>).mean(), pl.col(<span class="st">&quot;minutes_delayed_nas&quot;</span>).mean()])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>carrier <span class="op">=</span>(ggplot(filled, aes(<span class="st">&quot;num_of_delays_carrier&quot;</span>)) </span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> labs(title<span class="op">=</span><span class="st">&quot;Carrier Delays&quot;</span>, x<span class="op">=</span><span class="st">&quot;Number of Delays&quot;</span>, y<span class="op">=</span><span class="st">&quot;Count&quot;</span>)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>nas <span class="op">=</span> (ggplot(filled, aes(<span class="st">&quot;minutes_delayed_nas&quot;</span>))</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> geom_histogram(bins<span class="op">=</span><span class="dv">30</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="op">+</span> labs(title<span class="op">=</span><span class="st">&quot;NAS Delays &quot;</span>, x<span class="op">=</span><span class="st">&quot;Delay Length (In Minutes)&quot;</span>, y<span class="op">=</span><span class="st">&quot;Number of Delays&quot;</span>)</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>filled.select([pl.col(<span class="st">&quot;num_of_delays_carrier&quot;</span>).mean(), pl.col(<span class="st">&quot;minutes_delayed_nas&quot;</span>).mean()])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="7">
+<div class="cell-output cell-output-display" data-execution_count="8">
 <div><style>
 .dataframe > thead > tr,
 .dataframe > tbody > tr {
@@ -2625,12 +2897,12 @@ white-space: pre-wrap;
 </div>
 </div>
 </div>
-<div id="578467f6" class="cell" data-execution_count="8">
+<div id="aa177115" class="cell" data-execution_count="9">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>carrier</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>carrier</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="8">
+<div class="cell-output cell-output-display" data-execution_count="9">
 
    
        <meta charset="UTF-8">
@@ -2640,7 +2912,7 @@ white-space: pre-wrap;
 //# sourceMappingURL=lets-plot.js.map</script>
    
    
-          <div id="7jku2h"></div>
+          <div id="tY4Y5W"></div>
    <script type="text/javascript" data-lets-plot-script="plot">
    
    (function() {
@@ -2665,7 +2937,7 @@ white-space: pre-wrap;
        };
    }
    
-   const containerDiv = document.getElementById("7jku2h");
+   const containerDiv = document.getElementById("tY4Y5W");
    let fig = null;
    
    function renderPlot() {
@@ -2711,22 +2983,22 @@ white-space: pre-wrap;
 "type":"int",
 "column":"num_of_delays_total"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_carrier"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_late_aircraft"
 },{
 "type":"float",
 "column":"minutes_delayed_nas"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_security"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_weather"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_total"
 }]
 },
@@ -2803,12 +3075,12 @@ white-space: pre-wrap;
 
 </div>
 </div>
-<div id="bb7ea7da" class="cell" data-execution_count="9">
+<div id="c828327b" class="cell" data-execution_count="10">
 <details class="code-fold">
 <summary>Show the code</summary>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>nas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>nas</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </details>
-<div class="cell-output cell-output-display" data-execution_count="9">
+<div class="cell-output cell-output-display" data-execution_count="10">
 
    
        <meta charset="UTF-8">
@@ -2818,7 +3090,7 @@ white-space: pre-wrap;
 //# sourceMappingURL=lets-plot.js.map</script>
    
    
-          <div id="bi3WTU"></div>
+          <div id="3ieg2k"></div>
    <script type="text/javascript" data-lets-plot-script="plot">
    
    (function() {
@@ -2843,7 +3115,7 @@ white-space: pre-wrap;
        };
    }
    
-   const containerDiv = document.getElementById("bi3WTU");
+   const containerDiv = document.getElementById("3ieg2k");
    let fig = null;
    
    function renderPlot() {
@@ -2889,22 +3161,22 @@ white-space: pre-wrap;
 "type":"int",
 "column":"num_of_delays_total"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_carrier"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_late_aircraft"
 },{
 "type":"float",
 "column":"minutes_delayed_nas"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_security"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_weather"
 },{
-"type":"int",
+"type":"float",
 "column":"minutes_delayed_total"
 }]
 },
