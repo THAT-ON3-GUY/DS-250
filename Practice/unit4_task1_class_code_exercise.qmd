@@ -56,9 +56,9 @@ We'll first read in and clean the data. This is something you should be familiar
 import polars.selectors as cs
 
 df_missing = df.with_columns(
-                 pl.col('month').replace("n/a", ****)
-                ,pl.col('num_of_delays_carrier').replace('1500+', 1500).****(pl.Int64)
-                ,cs.numeric().****(-999, None)
+                 pl.col('month').replace("n/a", "unknown")
+                ,pl.col('num_of_delays_carrier').replace('1500+', 1500).cast(pl.Int64)
+                ,cs.numeric().replace(-999, None)
 )
 ```
 
@@ -69,7 +69,7 @@ Many machine learning models cannot handle missing data very well. Some of them 
 
 ```{python}
 # replace all the missing values in the numeric columns with their respective mean
-df_cleaned = df_missing.with_columns(cs.****().fill_null(**** = 'mean'))
+df_cleaned = df_missing.with_columns(cs.numeric().fill_null(strategy= 'mean'))
 
 # Later we will drop the month column, therefore the missing values in that column won't be a problem.
 # Therefore, just ignore the missing values in the month column for now
@@ -86,7 +86,7 @@ Many/most machine learning models cannot receive categorical variables as featur
 
 ```{python}
 # write code on the right side of the equal sign that will return only the numeric variables
-x = 
+x = df_cleaned.select(cs.numeric())
 
 y = df_cleaned.select('airport_code')
 ```
@@ -125,11 +125,11 @@ The command below takes the x and y objects and splits it into 4. It puts 20% of
 from sklearn.model_selection import train_test_split
 
 # You can name the 4 objects anything you like. These names are pretty standard though
-x_train, x_test, y_train, y_test = ****(x, y, test_size=0.2, random_state=42)
+x_train, x_test, y_train, y_test = train_test_split(x, y, test_size=0.2, random_state=42)
 
 # You can use these two commands to check the size of the 4 objects and verify they meet your expectations
-print(x_train.*****, y_train.shape)
-print(x_test.shape, y_****.shape)
+print(x_train.shape, y_train.shape)
+print(x_test.shape, y_test.shape)
 ```
 
 Note the use of `random_state = 42` in the code above. This sets the random seed for the function to create the split. This way, all the students will get the same results, and you will get the same result each time you run it. Otherwise, the functions creates a different random sample of points each time it is run, which can be difficult to reproduce.
@@ -145,7 +145,7 @@ from sklearn.tree import DecisionTreeClassifier #import the model
 from sklearn.ensemble import RandomForestClassifier #example of a different model to try
 
 my_classifier = DecisionTreeClassifier() #define the model
-my_classifier.****(x_train, y_train) #fit the model on the training data
+my_classifier.fit(x_train, y_train) #fit the model on the training data
 ```
 
 At first, the DecisionTreeClassifier() command seems a bit odd since it is such an empty step. Because we accepted all the defaults there is nothing in the parenthesis. This steps sets up the model structure, or defines the algorithm, but hasn't given it any data yet.
@@ -161,7 +161,7 @@ You can begin to see, it is important to define what model you actually want bef
 At this point, we feed the model the x values of the test set, but don't give it the answers.
 
 ```{python}
-pred = my_classifier.predict(****)
+pred = my_classifier.predict(x_test)
 ```
 
 ## Evaluate the model performance
@@ -178,3 +178,12 @@ What accuracy did you get?
 **Think**
 
 Brainstorm as a group ideas of what you might try to improve the accuracy of your model.
+
+
+```{python}
+my_classifier2 = RandomForestClassifier()
+my_classifier2.fit(x_train, y_train)
+
+pred = my_classifier2.predict(x_test)
+print(classification_report(y_test, pred))
+```

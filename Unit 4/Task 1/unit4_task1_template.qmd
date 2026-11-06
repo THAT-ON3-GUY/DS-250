@@ -1,0 +1,114 @@
+---
+title: "Client Report - Can You Predict That?"
+subtitle: "Unit 4 Task 1"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import numpy as np
+from lets_plot import *
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+import polars.selectors as cs
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.metrics import accuracy_score
+# add the additional libraries you need to import for ML here
+
+LetsPlot.setup_html(isolated_frame=True)
+
+```
+
+
+```{python}
+# import your data here using polars and the URL
+url = "https://github.com/byuidatascience/data4dwellings/raw/master/data-raw/dwellings_ml/dwellings_ml.csv"
+
+data = pl.read_csv(url)
+data
+```
+
+## QUESTION
+
+1. __Take time to get to know your data.__ Based on some initial exploration, identify 3 variables in the dataset you think will have strong predictive ability for determining if a house was built before 1980. Explain/justify the reasoning behind your guesses (for example with plots).
+
+
+To seperate data in order to find the factors I wanted I first seperated based on whether or not a house was built before or during/after 1980. Early test I ran showed there were no null values in the yrbuilt column and no weird outliers to I'm confindent that there won't be skewing of my data. 
+
+After seperating the data I looked at the medians and averages for each value to get an idea of the biggest differences.
+
+I settled on:
+
+livearea: homes from 1980 and onward have around 600 more sqft of livable space on average
+
+arcstyle_ONE-STORY: only 6.4% of houses from 1980 and onward have a one story architectural style whereas 56.3% of houses from before 1980 have an one story architectural style.
+
+tasp: the average tax assesed selling price for a 1980 and onward home is around $100,000 more than a house from before 1980.
+
+These differences seemed the most significant and I think using these in combination with each other and other potential factors will help me to have a high success rate.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+justify = (
+    data
+    .with_columns(before1980=pl.col("yrbuilt") < 1980)
+    .group_by("before1980")
+    .agg(
+        homes=pl.len(),
+        median_livearea=pl.col("livearea").median(),
+        pct_one_story=(pl.col("arcstyle_ONE-STORY").mean() * 100).round(1),
+        median_price=pl.col("tasp").median(),
+    )
+    .sort("before1980")
+)
+justify
+```
+
+1. __Build a classification model labeling houses as being built “before 1980” or “during or after 1980”.__ Your goal is to reach or exceed 90% accuracy. Report your final model choice and any other model parameters you may have tweaked (train-test split ratio, tuning parameters, etc).  
+
+Despite the factors I guessed on before the reality was that no single column had a major impact how what distinguished a home as being built before 1980 or during/after. Because of this I decided to use a RandomForestClassifier ML Model. It's use of averaging to decided the best way to distinguish and find important factors has created a consistent 92%-93% accuracy on all tests I've run. I decided to go with 400 estimators just to make sure I run enough tests though accurary showed litte difference from 100 to 400. I also used -1 for the n_jobs to allow the program to use my cores in parallel to speed up calculations. 
+
+I decided on a 20/80 split so the ML model had plenty to train off of and therefore would have better averages.
+
+```{python}
+# Include and execute your code here
+# Don't forget, you need another import statement to import the desired ML model from sklearn
+
+y = (data["yrbuilt"] < 1980).to_numpy()
+X = data.drop("yrbuilt", "before1980", "parcel", strict=False)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+
+model = RandomForestClassifier(n_estimators=400, random_state=42, n_jobs=-1)
+model.fit(X_train, y_train)
+
+print("forest", accuracy_score(y_test, model.predict(X_test)))
+```
+
