@@ -1,0 +1,191 @@
+---
+title: "Client Report - Show me!"
+subtitle: "Unit 4 Task 3"
+author: "Jayden Pope"
+format:
+  html:
+    self-contained: true
+    page-layout: full
+    title-block-banner: true
+    toc: true
+    toc-depth: 3
+    toc-location: body
+    number-sections: false
+    html-math-method: katex
+    code-fold: true
+    code-summary: "Show the code"
+    code-overflow: wrap
+    code-copy: hover
+    code-tools:
+        source: false
+        toggle: true
+        caption: See code
+execute: 
+  warning: false
+    
+---
+
+```{python}
+import polars as pl
+import numpy as np
+from lets_plot import *
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import GradientBoostingClassifier
+from xgboost import XGBClassifier
+from sklearn.metrics import classification_report
+from sklearn.inspection import permutation_importance
+import matplotlib.pyplot as plt
+import warnings
+# add the additional libraries you need to import for ML here
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+```{python}
+# import your data here using polars and the URL
+warnings.filterwarnings("ignore", message=".*valid feature names.*")
+
+url = "https://github.com/byuidatascience/data4dwellings/raw/master/data-raw/dwellings_ml/dwellings_ml.csv"
+
+data = pl.read_csv(url)
+data
+```
+
+## QUESTION 1
+
+1. __Repeat the classification exercise using 2 different algorithms/models. Explain the differences between the 3 models__ (your original one, and the 2 new ones for this task).
+
+The models I chose are quite similar which I did on purpose the biggest initial distinction is between how my first model and the 2 new ones I chose train on data. my initial Random Forest model utilizes bagging where it makes a series of deep trees that it then compares and averages to then decide the best way to discern between houses from before 1980 and during/after 1980. On the other hand the 2 new models I used are Grandient Boosting and XGB or Extreme Gradient Boosting. GB and XGB both use boosting where they create shallow trees that iterate off of previous trees in order to correct the errors of the previous trees. 
+
+Bagging is beneficial because it reduces varience narrowing down the most important factors that help it to distinguish between houses before 1980 or those built during/after. On the other hand Boosting reduces bias which helps keeps the model from overdependence on any singular factor.
+
+The distinction between GB and XGB is that XGB is a more powerful, normalized version of GB. XGB has more parameters for fine tuning, is better prepared to handle things like null values, and supports tree construction in parallel and subsampling making it better for larger datasets.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+y = (data["yrbuilt"] < 1980).to_numpy()
+X = data.drop("yrbuilt", "before1980", "parcel", strict=False)
+
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, stratify=y, random_state=42
+)
+
+model = RandomForestClassifier(n_estimators=400, random_state=42, n_jobs=-1)
+model.fit(X_train, y_train)
+
+
+gb_model = GradientBoostingClassifier(
+    n_estimators=400,
+    learning_rate=0.1,
+    max_depth=3,
+    subsample=0.8,
+    random_state=42,
+)
+gb_model.fit(X_train, y_train)
+
+
+xgb_model = XGBClassifier(
+    n_estimators=400,
+    learning_rate=0.1,
+    max_depth=6,
+    subsample=0.8,
+    colsample_bytree=0.8,
+    eval_metric="logloss",
+    random_state=42,
+    n_jobs=-1,
+)
+xgb_model.fit(X_train, y_train.astype(int))
+```
+## QUESTION 2
+
+1. For each model (your original one, and the 2 new ones for this task), display the classification report and the permutation importances for the most important features.  Discuss which model you would recommend to the Client and why.
+
+Just based on the classification reports alone I would say that any model is fine. The thing is there is important nuance required here. The client is trying to distinguish between houses for health and safety reasons most likely connected to the asbestos bans that were put into place around 1980 therefore you'd want to prioritize a model that is able to precisely and correctly classify as many houses as possible. 
+
+Because of this fact I'd recommend the XGB model, not only does it have the best scores out of all three models, the boosting focus on reducing bias, and increased customization that's available through XGB model parameters allows fine tuning of model priorities and reduce both false positives and false negatives. Despite the fact that regular GB works very well, absolute preciscion should be the utmost priority when the health and happiness of people is at stake.
+
+The permutation importance charts also show that generally the same factors were of importance across all 3 models but also that the Random Tree model potentially placed a bit too much importance on whether or not a home has an Attached Garage as a feature.
+
+Personally I'd go with the XGB model and continue to tweak the parameters starting with the learning rate and number of estimators to regulate the amount of correction each tree adds to it's successor along with the number of trees. 
+Then I'd tweak the tree's themselves modifying things like depth or the minimum child weight which determines the minimum amount of rows of data a feature needs to have in order to be considered. 
+Next I'd edit the randomness of the training data to adjust how features are split during training and can reduce overfitting. The last two things I'd do are adjust the regularization for the leaves in each tree (one of the XGB exclusive benefits) which lets you modify how much any one thing can sway the model's predictions.
+Finally after being satisfied with the changes I'd once again go back and modify the learning rate and number of estimators in order to squeeze out any last drops of precision.
+
+_AI use reflection_
+**Link** to the original chat:
+**The Process** How exactly did you use the tool?
+**The Impact**  How did using AI impact your learning?
+
+```{python}
+print("Random Forest Classifier")
+print(classification_report(y_test, model.predict(X_test)))
+
+tree_result = permutation_importance(
+    model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=1
+)
+
+tree_importances = tree_result.importances_mean
+tree_indices = np.argsort(tree_importances)[::-1]
+
+
+tree_names = [X.columns[i] for i in tree_indices]
+
+plt.figure(figsize=(10, 6))
+plt.title("Top 15 Tree Permutation Importances")
+plt.bar(range(15), tree_importances[tree_indices][:15])
+plt.xticks(range(15), tree_names[:15], rotation=90)
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.show()
+
+
+print("Gradient Boosting Classifier")
+print(classification_report(y_test, gb_model.predict(X_test)))
+
+boost_result = permutation_importance(
+    gb_model, X_test, y_test, n_repeats=10, random_state=42, n_jobs=1
+)
+
+boost_importances = boost_result.importances_mean
+boost_indices = np.argsort(boost_importances)[::-1]
+
+
+boost_names = [X.columns[i] for i in boost_indices]
+
+plt.figure(figsize=(10, 6))
+plt.title("Top 15 GB Permutation Importances")
+plt.bar(range(15), boost_importances[boost_indices][:15])
+plt.xticks(range(15), boost_names[:15], rotation=90)
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.show()
+
+
+print("XGB Classifier")
+print(classification_report(y_test, xgb_model.predict(X_test)))
+
+xgb_result = permutation_importance(
+    xgb_model, X_test, y_test.astype(int), n_repeats=10, random_state=42, n_jobs=1
+)
+
+xgb_importances = xgb_result.importances_mean
+xgb_indices = np.argsort(xgb_importances)[::-1]
+
+
+xgb_names = [X.columns[i] for i in xgb_indices]
+
+plt.figure(figsize=(10, 6))
+plt.title("Top 15 XGB Permutation Importances")
+plt.bar(range(15), xgb_importances[xgb_indices][:15])
+plt.xticks(range(15), xgb_names[:15], rotation=90)
+plt.xlabel("Features")
+plt.ylabel("Importance")
+plt.show()
+```

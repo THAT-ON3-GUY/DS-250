@@ -38,6 +38,7 @@ from sklearn.inspection import permutation_importance
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import classification_report
 from sklearn.metrics import ConfusionMatrixDisplay
+import warnings
 # add the additional libraries you need to import for ML here
 
 LetsPlot.setup_html(isolated_frame=True)
@@ -46,6 +47,8 @@ LetsPlot.setup_html(isolated_frame=True)
 
 ```{python}
 # import your data here using polars and the URL
+warnings.filterwarnings("ignore", message=".*valid feature names.*")
+
 url = "https://github.com/byuidatascience/data4dwellings/raw/master/data-raw/dwellings_ml/dwellings_ml.csv"
 
 data = pl.read_csv(url)
