@@ -1,0 +1,122 @@
+---
+title: "Unit 5 Class 1: Regex"
+format: html
+---
+
+```{python}
+import polars as pl 
+import numpy as np
+from lets_plot import *
+# add the additional libraries you need to import for ML here
+
+LetsPlot.setup_html(isolated_frame=True)
+```
+
+
+Things we can do: split a string, extract groups, covert to lower case, strip white space. An alternative to splitting might be replacing.
+
+We will want to talk about regular expression as a syntax for matching literal strings or types of characters.
+
+```{python}
+phone = pl.DataFrame({
+    'name': [' Fay Ken Data', 'Fay k Data ', 'Fay K. Data.', "Fay K D'Ata", ' Fay Data ', 'Fay Kent Data'],
+    'ph'  : ['1234567890', '123 456 7890', '123-456-7890', '123.456.7890', '(123)456-7890', '+1 123 4567890']
+})
+phone
+```
+
+Let's try to harmonize these names and numbers so they have a consistent look feel.
+
+Let's start with the name. You can fix the issues in the order the students identify them. I'll deal with the leading and trailing white spaces first.
+
+Point out that the .str. method gives them access to 40+ functions made to deal with string data. Maybe type .str. and talk through many of the functions that are available for autofill.
+
+```{python}
+phone_1 = phone.with_columns(pl.col('name').str.strip_chars()
+                     # replace the period and apostrophe with empty strings to remove them
+                     .str.replace_all(r'\.|\'', "")   #or if you use double quotes you don't need the backslack in front of '. You get a warning if you don't put r in front of the string
+                     .str.to_titlecase()
+)                     
+phone_1
+```
+
+Here is a helpful cheatsheet: https://hypebright.nl/en/r-en/ultimate-cheatsheet-for-regex-in-r-2/
+
+Let's split the name into 3 parts
+
+```{python}
+phone_2 = phone_1.with_columns(
+    pl.col('name').str.extract("([[:alpha:]]+)").alias('first')
+    , pl.col('name').str.extract(" ([[:alpha:]]+)$").alias('last')
+    , pl.col('name').str.extract("^[[:alpha:]]* ([[:alpha:]]*) [[:alpha:]]*$").alias('middle')
+)
+phone_2
+```
+
+Could I have done this without standardizing the punctuation and capitalization first?? YES
+Well, I need to remove the white spaces at the end and beginning or it gets much more difficult
+
+```{python}
+phone.with_columns(pl.col('name').str.strip_chars()).with_columns(
+    pl.col('name').str.extract("^(\S+)\s").alias('first') #\S is any non-white space character
+    , pl.col('name').str.extract("\s(\S*)$").alias('last')
+    , pl.col('name').str.extract("^\S* (\S*) \S*$").alias('middle')
+)
+```
+
+*Optional:
+splitn() is a short cut if the names are more consistent. For example, the dataset doesn't include the name with no middle name
+
+```{python}
+phone_redux = phone_1.with_row_index().filter(pl.col('index') != 4)
+
+phone_redux.with_columns(
+    #pl.col('name').str.split(" ").list.to_struct(upper_bound=3) #split() gives a list
+     pl.col('name').str.splitn(" ", 3) #splitn() returns a struct
+     .struct.rename_fields(['first', 'middle', 'last'])
+).unnest('name')
+```
+
+Let's put the phone number into 3 pieces: area code, next 3 digits, and last 4 digits
+
+Probably the simplest thing to do is to remove everything that isn't a number.
+
+```{python}
+phone_3 = phone_2.with_columns(
+    #pl.col('ph').str.replace_all(" |-|\+|\(|\)|\.", "").alias('nums') #perhaps too hard to read
+    pl.col('ph').str.replace_all(r"\D", "") #uses \D to represent any non-digit\
+      .str.slice(-10) #gets the last 10 digits
+)
+phone_3
+```
+
+Now all the numbers are in a standard format, I'll try to break them apart into 3 separate pieces:
+area code, first 3, and last 4
+
+```{python}
+phone_3.with_columns(
+    pl.col('ph')
+      .str.extract(r"^(\d{3}).*$")     
+      .alias('area_code')
+    , pl.col('ph')
+        .str.extract(r"^\d{3}(\d{3}).*$")
+        .alias('next_3')
+    , pl.col('ph')
+        .str.extract(r"^.*(\d{4})$")
+        .alias('last_4')
+)
+```
+
+But in such a rigid format, here is a much simpler way
+
+```{python}
+phone_3.with_columns(
+    area_code = pl.col('ph').str.slice(0, 3),
+    next_3 = pl.col('ph').str.slice(3,3),
+    last_4 = pl.col('ph').str.slice(-4) #negative number reads from the end
+)
+```
+
+
+
+
